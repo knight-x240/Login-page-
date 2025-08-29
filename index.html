@@ -18,9 +18,13 @@
     <button type="submit">Login</button>
   </form>
 
-  <script>
-    const API = "https://abcd1234.ngrok.io"; // Replace with your ngrok URL
+  <h2>All Users</h2>
+  <ul id="userList"></ul>
 
+  <script>
+    const API = "https://atlantic-few-ix-entire.trycloudflare.com"; // Cloudflare URL
+
+    // Signup
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const res = await fetch(API + "/signup", {
@@ -33,8 +37,10 @@
       });
       const data = await res.json();
       alert(data.message || data.error);
+      loadUsers(); // update user list
     });
 
+    // Login
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const res = await fetch(API + "/login", {
@@ -48,6 +54,21 @@
       const data = await res.json();
       alert(data.message || data.error);
     });
+
+    // Load all users
+    async function loadUsers() {
+      const res = await fetch(API + "/users");
+      const users = await res.json();
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+      users.forEach(u => {
+        const li = document.createElement("li");
+        li.textContent = u.username;
+        list.appendChild(li);
+      });
+    }
+
+    loadUsers();
   </script>
 </body>
 </html>
